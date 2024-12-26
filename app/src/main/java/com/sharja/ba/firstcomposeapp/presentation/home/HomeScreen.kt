@@ -42,7 +42,7 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun HomeScreen(
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Int) -> Unit
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -58,8 +58,8 @@ fun HomeScreen(
             is ProductsState.OnSuccess<*> -> {
                 ProductPreviewList(
                     products = (productState as ProductsState.OnSuccess<List<FavProduct>>).data,
-                    onItemClick= { onItemClick(it) },
-                    onFavClick = {favProduct ->
+                    onItemClick = { onItemClick(it) },
+                    onFavClick = { favProduct ->
                         homeViewModel.toggleFavourite(favProduct)
                     })
             }
@@ -131,13 +131,11 @@ fun ProductPreviewItem(
                 onItemClick(favProduct.id)
             }
     ) {
-        GlideImage(
+        ShowProductImage(
             favProduct.images,
-            modifier = modifier
+            modifier
                 .height(250.dp)
                 .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            contentScale = ContentScale.Fit
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -146,24 +144,48 @@ fun ProductPreviewItem(
             Text(
                 text = favProduct.title,
                 fontSize = Typography.titleMedium.fontSize,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Start,
                 modifier = modifier
                     .weight(4f)
-                    .padding(16.dp)
+                    .padding(32.dp,16.dp,16.dp,16.dp)
 
             )
-            Icon(
-                imageVector = if (favProduct.isFav)Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                contentDescription = "Add To Fav icon",
-                tint = if (favProduct.isFav) Color.Red else Color.Black,
-                modifier = modifier
-                    .padding(16.dp)
-                    .weight(1f)
-                    .clickable {
-                        onFavClick(favProduct.copy(isFav = !favProduct.isFav))
-                    }
+            ShowFavouriteIcon(
+                favProduct,
+                modifier
+                    .padding(0.dp,16.dp,16.dp,16.dp)
+                    .weight(1f),
+                onFavClick
             )
+
         }
 
     }
+}
+
+@Composable
+fun ShowProductImage(imageURL: String, modifier: Modifier) {
+    GlideImage(
+        imageURL,
+        modifier = modifier,
+        contentScale = ContentScale.Fit,
+        alignment = Alignment.Center
+    )
+}
+
+@Composable
+fun ShowFavouriteIcon(
+    favProduct: FavProduct,
+    modifier: Modifier,
+    onFavClick: (FavProduct) -> Unit
+) {
+    Icon(
+        imageVector = if (favProduct.isFav) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+        contentDescription = "Add To Fav icon",
+        tint = if (favProduct.isFav) Color.Red else Color.Black,
+        modifier = modifier
+            .clickable {
+                onFavClick(favProduct.copy(isFav = !favProduct.isFav))
+            }
+    )
 }

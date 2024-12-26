@@ -4,9 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sharja.ba.firstcomposeapp.data.Repository
+import com.sharja.ba.firstcomposeapp.presentation.BaseViewModule
 import com.sharja.ba.firstcomposeapp.presentation.ProductsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,11 +16,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
-    private val repository: Repository,
+    repository: Repository,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : BaseViewModule(repository) {
     var state by mutableStateOf<ProductsState>(ProductsState.OnLoading)
         private set
+
+    init {
+        getProductById()
+    }
 
     private fun getProductById() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -29,9 +33,10 @@ class ProductDetailsViewModel @Inject constructor(
             if (id == 0) {
                 state =
                     ProductsState.OnFailed(IllegalArgumentException("Product ID is missing or invalid."))
+                return@launch
             }
 
-            repository.getRemoteProductByID(id)
+            repository.getFavProductById(id)
                 .catch { throwable ->
                     state = ProductsState.OnFailed(throwable)
                 }
@@ -41,9 +46,4 @@ class ProductDetailsViewModel @Inject constructor(
         }
 
     }
-
-    init {
-        getProductById()
-    }
-
 }

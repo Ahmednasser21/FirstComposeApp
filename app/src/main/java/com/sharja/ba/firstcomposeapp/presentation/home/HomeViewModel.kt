@@ -4,11 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sharja.ba.firstcomposeapp.data.Repository
 import com.sharja.ba.firstcomposeapp.data.local.FavProduct
-import com.sharja.ba.firstcomposeapp.domain.Product
+import com.sharja.ba.firstcomposeapp.presentation.BaseViewModule
 import com.sharja.ba.firstcomposeapp.presentation.ProductsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,8 +18,8 @@ import javax.inject.Inject
 private const val TAG = "HomeViewModel"
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: Repository
-) : ViewModel() {
+    repository: Repository
+) : BaseViewModule(repository) {
     var favState by mutableStateOf<ProductsState>(ProductsState.OnLoading)
         private set
 
@@ -60,12 +59,6 @@ class HomeViewModel @Inject constructor(
 
                     favState = ProductsState.OnSuccess(favProducts)
                 }
-        }
-    }
-    fun toggleFavourite(favProduct: FavProduct){
-        viewModelScope.launch (Dispatchers.IO) {
-            repository.updateFavProduct(favProduct)
-            getAllFav()
         }
     }
 }
