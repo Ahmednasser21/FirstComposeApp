@@ -1,18 +1,21 @@
-package com.sharja.ba.firstcomposeapp.presentation
+package com.sharja.ba.firstcomposeapp.products.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.toRoute
-import com.sharja.ba.firstcomposeapp.ui.theme.FirstComposeAppTheme
-import com.sharja.ba.firstcomposeapp.presentation.home.HomeScreen
-import com.sharja.ba.firstcomposeapp.presentation.productdetails.ProductDetailsScreen
+import com.sharja.ba.firstcomposeapp.theme.FirstComposeAppTheme
+import com.sharja.ba.firstcomposeapp.products.presentation.home.HomeScreen
+import com.sharja.ba.firstcomposeapp.products.presentation.home.HomeViewModel
+import com.sharja.ba.firstcomposeapp.products.presentation.productdetails.ProductDetailsScreen
+import com.sharja.ba.firstcomposeapp.products.presentation.productdetails.ProductDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
 
@@ -28,7 +31,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
+/*@Composable
 fun DummyProductsApp() {
 
     val navController = rememberNavController()
@@ -50,7 +53,7 @@ fun DummyProductsApp() {
             ProductDetailsScreen ()
         }
     }
-}
+}*/
 @Composable
 fun DummyProductsAppNewNav() {
 
@@ -58,17 +61,26 @@ fun DummyProductsAppNewNav() {
     NavHost(navController = navController, startDestination = Home) {
 
         composable<Home> {
-            HomeScreen { productId ->
-
+            val homeViewModel: HomeViewModel = hiltViewModel()
+            HomeScreen(homeViewModel.productsState,
+                { productId ->
 //                val productJson = Json.encodeToString(product)
-                navController.navigate(ProductDetails(productId))
-            }
+                    navController.navigate(ProductDetails(productId))
+                }, { productId, isFav ->
+                    homeViewModel.toggleFavourite(productId, isFav)
+                }
+            )
         }
 
-        composable<ProductDetails>{ backStackEntry ->
+        composable<ProductDetails> { backStackEntry ->
 //            val productDetails:ProductDetails = backStackEntry.toRoute()
 //            val product = Json.decodeFromString<Product>(productDetails.product)
-            ProductDetailsScreen ()
+            val productDetailsViewModel: ProductDetailsViewModel = hiltViewModel()
+            ProductDetailsScreen(
+                productDetailsViewModel.state
+            ) { productId, isFav ->
+                productDetailsViewModel.toggleFavourite(productId, isFav)
+            }
         }
     }
 }
@@ -77,7 +89,7 @@ fun DummyProductsAppNewNav() {
 object Home
 
 @Serializable
-data class ProductDetails(val productId:Int)
+data class ProductDetails(val productId: Int)
 
 //@Preview(showBackground = true, showSystemUi = true)
 //@Composable

@@ -1,10 +1,10 @@
-package com.sharja.ba.firstcomposeapp.domain
+package com.sharja.ba.firstcomposeapp.products.data.remote
 
 import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Product(
+data class RemoteProduct(
     val id: Int = 0,
     val title: String = "",
     val description: String= "",

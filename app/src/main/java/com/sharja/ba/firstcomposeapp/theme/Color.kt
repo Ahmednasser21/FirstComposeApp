@@ -1,4 +1,4 @@
-package com.sharja.ba.firstcomposeapp.ui.theme
+package com.sharja.ba.firstcomposeapp.theme
 
 import androidx.compose.ui.graphics.Color
 

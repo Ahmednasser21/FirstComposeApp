@@ -16,9 +16,8 @@
         android:theme="@style/Theme.FirstComposeApp"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".products.presentation.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.FirstComposeApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

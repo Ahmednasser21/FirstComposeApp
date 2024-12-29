@@ -1,10 +1,10 @@
-package com.sharja.ba.firstcomposeapp.data.di
+package com.sharja.ba.firstcomposeapp.products.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.sharja.ba.firstcomposeapp.data.local.FavProductsDatabase
-import com.sharja.ba.firstcomposeapp.data.local.FavProductDao
-import com.sharja.ba.firstcomposeapp.data.remote.ProductService
+import com.sharja.ba.firstcomposeapp.products.data.local.LocalProductDao
+import com.sharja.ba.firstcomposeapp.products.data.local.LocalProductsDatabase
+import com.sharja.ba.firstcomposeapp.products.data.remote.ProductService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,22 +34,25 @@ object ProductDataModule {
     ): ProductService {
         return retrofit.create(ProductService::class.java)
     }
+
     @Singleton
     @Provides
     fun provideRoomDb(
-       @ApplicationContext context: Context
-    ):FavProductsDatabase{
+        @ApplicationContext context: Context
+    ): LocalProductsDatabase {
         return Room.databaseBuilder(
             context,
-            FavProductsDatabase::class.java,
+            LocalProductsDatabase::class.java,
             "fav_products_database"
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
     }
+
     @Singleton
     @Provides
     fun provideDao(
-        favDatabase:FavProductsDatabase
-    ): FavProductDao {
-        return favDatabase.productDao()
+        localDatabase: LocalProductsDatabase
+    ): LocalProductDao {
+        return localDatabase.productDao()
     }
 }

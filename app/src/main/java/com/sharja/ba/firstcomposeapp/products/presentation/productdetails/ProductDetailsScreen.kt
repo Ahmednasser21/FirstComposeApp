@@ -1,4 +1,4 @@
-package com.sharja.ba.firstcomposeapp.presentation.productdetails
+package com.sharja.ba.firstcomposeapp.products.presentation.productdetails
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,43 +22,44 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sharja.ba.firstcomposeapp.data.local.FavProduct
-import com.sharja.ba.firstcomposeapp.presentation.ProductsState
-import com.sharja.ba.firstcomposeapp.presentation.home.ShowFavouriteIcon
-import com.sharja.ba.firstcomposeapp.presentation.home.ShowProductImage
-import com.sharja.ba.firstcomposeapp.presentation.home.ShowingErrorSnackbar
-import com.sharja.ba.firstcomposeapp.presentation.home.ShowingProgressbar
-import com.sharja.ba.firstcomposeapp.ui.theme.Typography
+import com.sharja.ba.firstcomposeapp.products.domain.Product
+import com.sharja.ba.firstcomposeapp.products.presentation.ErrorSnackbar
+import com.sharja.ba.firstcomposeapp.products.presentation.FavouriteIcon
+import com.sharja.ba.firstcomposeapp.products.presentation.ProductImage
+import com.sharja.ba.firstcomposeapp.products.presentation.Progressbar
+import com.sharja.ba.firstcomposeapp.products.presentation.State
+import com.sharja.ba.firstcomposeapp.theme.Typography
 
 @Composable
-fun ProductDetailsScreen() {
-    val productDetailsViewModle: ProductDetailsViewModel = hiltViewModel()
+fun ProductDetailsScreen(
+    state: State,
+    onFavClick: (id:Int, isFav:Boolean) -> Unit
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
-        when (val state = productDetailsViewModle.state) {
-            is ProductsState.OnLoading -> {
-                ShowingProgressbar(paddingValues)
+        when ( state ) {
+            is State.OnLoading -> {
+                Progressbar(paddingValues)
             }
 
-            is ProductsState.OnSuccess<*> -> {
-                val product = (state as ProductsState.OnSuccess<FavProduct>).data
+            is State.OnSuccess<*> -> {
+                val product = (state as State.OnSuccess<Product>).data
                 ProductItem(product, onFavClick = {
-                    productDetailsViewModle.toggleFavourite(it)
+                    onFavClick(it.id, it.isFav)
                 })
             }
 
-            is ProductsState.OnFailed -> {
-                val error = state.error.message
-                ShowingErrorSnackbar(snackbarHostState, error)
+            is State.OnFailed -> {
+                val error = state.error
+                ErrorSnackbar(snackbarHostState, error)
             }
         }
     }
@@ -66,33 +67,38 @@ fun ProductDetailsScreen() {
 }
 
 @Composable
-fun ProductItem(favProduct: FavProduct, modifier: Modifier = Modifier,onFavClick:(FavProduct)->Unit) {
-    val rating = Math.round(favProduct.rating.toFloat())
+fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (Product) -> Unit) {
+    val rating = Math.round(product.rating.toFloat())
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
             .padding(vertical = 16.dp),
         Arrangement.SpaceBetween
     ) {
-        ShowProductImage(
-            favProduct.images,
+        ProductImage(
+            product.images,
             modifier = modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
                 .height(LocalConfiguration.current.screenHeightDp.dp * 0.6f),
-            )
+        )
         Text(
-            text = favProduct.title,
-            modifier = modifier.align(Alignment.CenterHorizontally)
+            text = product.title,
+            modifier = modifier
+                .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 16.dp),
             textAlign = TextAlign.Start,
             fontSize = Typography.headlineSmall.fontSize,
             color = MaterialTheme.colorScheme.primary
         )
-        Row(modifier = modifier.fillMaxWidth()
-            .padding(horizontal = 16.dp)) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
             Text(
-                text = "Brand: ${favProduct.brand}",
+                text = "Brand: ${product.brand}",
                 textAlign = TextAlign.Start,
                 fontSize = Typography.titleMedium.fontSize,
                 modifier = modifier
@@ -100,7 +106,7 @@ fun ProductItem(favProduct: FavProduct, modifier: Modifier = Modifier,onFavClick
 
             )
             Text(
-                text = "Price: ${favProduct.price}$",
+                text = "Price: ${product.price}$",
                 textAlign = TextAlign.End,
                 fontSize = Typography.titleMedium.fontSize,
                 modifier = modifier
@@ -109,7 +115,7 @@ fun ProductItem(favProduct: FavProduct, modifier: Modifier = Modifier,onFavClick
         }
 
         Text(
-            text = "Description: ${favProduct.description}",
+            text = "Description: ${product.description}",
             modifier = modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 16.dp),
@@ -117,7 +123,8 @@ fun ProductItem(favProduct: FavProduct, modifier: Modifier = Modifier,onFavClick
         )
 
         Row(
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -129,8 +136,8 @@ fun ProductItem(favProduct: FavProduct, modifier: Modifier = Modifier,onFavClick
             )
             RatingBar(rating, modifier = modifier)
             Spacer(modifier = Modifier.weight(1f))
-            ShowFavouriteIcon(
-                favProduct,
+            FavouriteIcon(
+                product,
                 modifier,
                 onFavClick
             )
@@ -162,5 +169,5 @@ fun RatingBar(
         text = "($rating)",
         fontSize = 14.sp,
 
-    )
+        )
 }
