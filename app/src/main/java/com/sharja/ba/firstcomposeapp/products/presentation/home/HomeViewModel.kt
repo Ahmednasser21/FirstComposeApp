@@ -1,8 +1,5 @@
 package com.sharja.ba.firstcomposeapp.products.presentation.home
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.sharja.ba.firstcomposeapp.products.domain.SyncAndGetLocalProductUseCase
 import com.sharja.ba.firstcomposeapp.products.domain.UpdateFavouriteUseCase
@@ -23,7 +20,7 @@ class HomeViewModel @Inject constructor(
     updateFavouriteUseCase: UpdateFavouriteUseCase,
     private val syncAndGetLocalProductUseCase: SyncAndGetLocalProductUseCase
 ) : BaseViewModule(updateFavouriteUseCase) {
-    private var _productsState = MutableStateFlow<State>(State.OnLoading)
+    private val _productsState = MutableStateFlow<State>(State.OnLoading)
     val productsState =_productsState.asStateFlow()
         .onStart { getProductList() }
         .stateIn(

@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.sharja.ba.firstcomposeapp.products.domain.Product
 import com.sharja.ba.firstcomposeapp.products.presentation.ErrorSnackbar
 import com.sharja.ba.firstcomposeapp.products.presentation.FavouriteIcon
