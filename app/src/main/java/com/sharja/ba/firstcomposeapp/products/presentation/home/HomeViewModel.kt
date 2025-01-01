@@ -22,12 +22,9 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModule(updateFavouriteUseCase) {
     private val _productsState = MutableStateFlow<State>(State.OnLoading)
     val productsState =_productsState.asStateFlow()
-        .onStart { getProductList() }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Lazily,
-            State.OnLoading
-        )
+    init {
+        getProductList()
+    }
 
     private fun getProductList() {
         viewModelScope.launch {

@@ -6,12 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import androidx.navigation.toRoute
 import com.sharja.ba.firstcomposeapp.theme.FirstComposeAppTheme
 import com.sharja.ba.firstcomposeapp.products.presentation.home.HomeScreen
 import com.sharja.ba.firstcomposeapp.products.presentation.home.HomeViewModel
@@ -73,12 +70,12 @@ fun DummyProductsAppNewNav() {
             )
         }
 
-        composable<ProductDetails> { backStackEntry ->
+        composable<ProductDetails> {
 //            val productDetails:ProductDetails = backStackEntry.toRoute()
 //            val product = Json.decodeFromString<Product>(productDetails.product)
             val productDetailsViewModel: ProductDetailsViewModel = hiltViewModel()
             ProductDetailsScreen(
-                productDetailsViewModel.state
+                productDetailsViewModel.productDetailsState.collectAsState().value
             ) { productId, isFav ->
                 productDetailsViewModel.toggleFavourite(productId, isFav)
             }
