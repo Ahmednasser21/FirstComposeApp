@@ -34,7 +34,7 @@ object ProductDataModule {
     ): ProductService {
         return retrofit.create(ProductService::class.java)
     }
-
+    @Synchronized
     @Singleton
     @Provides
     fun provideRoomDb(

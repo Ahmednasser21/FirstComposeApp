@@ -7,10 +7,7 @@ import com.sharja.ba.firstcomposeapp.products.presentation.BaseViewModule
 import com.sharja.ba.firstcomposeapp.products.presentation.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

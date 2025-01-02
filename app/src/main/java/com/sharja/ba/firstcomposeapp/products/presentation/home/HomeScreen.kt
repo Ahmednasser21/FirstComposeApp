@@ -48,10 +48,10 @@ fun HomeScreen(
 
             is State.OnSuccess<*> -> {
                 ProductList(
-                    products = (state as State.OnSuccess<List<Product>>).data,
+                    products = state.data as List<Product>,
                     onItemClick = { onItemClick(it) },
-                    onFavClick = { product ->
-                       onFavClick(product.id,product.isFav)
+                    onFavClick = { id,isFav ->
+                       onFavClick(id,isFav)
                     })
             }
 
@@ -67,14 +67,14 @@ fun HomeScreen(
 fun ProductList(
     products: List<Product>,
     onItemClick: (productId: Int) -> Unit,
-    onFavClick: (Product) -> Unit
+    onFavClick: (id:Int,isFav:Boolean) -> Unit
 ) {
     LazyColumn {
         items(products) { favProduct ->
             ProductItem(
                 product = favProduct,
                 onItemClick = { onItemClick(it) },
-                onFavClick = { onFavClick(it) })
+                onFavClick = { id,isFav->onFavClick(id,isFav)})
         }
     }
 }
@@ -84,7 +84,7 @@ fun ProductItem(
     product: Product,
     modifier: Modifier = Modifier,
     onItemClick: (productId: Int) -> Unit,
-    onFavClick: (Product) -> Unit
+    onFavClick: (id:Int,isFav:Boolean) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -122,9 +122,8 @@ fun ProductItem(
                 product,
                 modifier
                     .padding(0.dp, 16.dp, 16.dp, 16.dp)
-                    .weight(1f),
-                onFavClick
-            )
+                    .weight(1f)
+            ){id,isFav->onFavClick(id,isFav)}
 
         }
 

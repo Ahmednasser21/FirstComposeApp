@@ -22,6 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
@@ -35,7 +38,11 @@ fun Progressbar(paddingValues: PaddingValues) {
             .padding(paddingValues),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(
+            modifier = Modifier.semantics {
+                this.contentDescription= SemanticsDescription.HOME_lOADING
+            }
+        )
     }
 }
 
@@ -54,16 +61,16 @@ fun ErrorSnackbar(snackbarHostState: SnackbarHostState, error: String?) {
 fun FavouriteIcon(
     localProduct: Product,
     modifier: Modifier,
-    onFavClick: (Product) -> Unit
+    onFavClick: (id:Int,isFav:Boolean) -> Unit
 ) {
     Icon(
         imageVector = if (localProduct.isFav) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-        contentDescription = "Add To Fav icon",
+        contentDescription = "Add To Fav icon of ${localProduct.title}",
         tint = if (localProduct.isFav) Color.Red else Color.Black,
         modifier = modifier
             .clickable {
-                onFavClick(localProduct)
-            }
+                onFavClick(localProduct.id, localProduct.isFav)
+            }.testTag("fav_icon_${localProduct.id}")
     )
 }
 

@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.sharja.ba.firstcomposeapp.products.domain.Product
 import com.sharja.ba.firstcomposeapp.products.presentation.ErrorSnackbar
 import com.sharja.ba.firstcomposeapp.products.presentation.FavouriteIcon
@@ -51,10 +50,8 @@ fun ProductDetailsScreen(
             }
 
             is State.OnSuccess<*> -> {
-                val product = (state as State.OnSuccess<Product>).data
-                ProductItem(product, onFavClick = {
-                    onFavClick(it.id, it.isFav)
-                })
+                val product = state.data as Product
+                ProductItem(product){id, isFav -> onFavClick(id,isFav) }
             }
 
             is State.OnFailed -> {
@@ -67,7 +64,7 @@ fun ProductDetailsScreen(
 }
 
 @Composable
-fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (Product) -> Unit) {
+fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (id:Int,isFav:Boolean) -> Unit) {
     val rating = Math.round(product.rating.toFloat())
 
     Column(
@@ -138,9 +135,8 @@ fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (Pr
             Spacer(modifier = Modifier.weight(1f))
             FavouriteIcon(
                 product,
-                modifier,
-                onFavClick
-            )
+                modifier
+            ){id,isFav-> onFavClick(id,isFav)}
         }
 
     }
