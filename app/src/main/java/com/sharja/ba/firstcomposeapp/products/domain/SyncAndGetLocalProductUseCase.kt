@@ -25,17 +25,23 @@ class SyncAndGetLocalProductUseCase @Inject constructor(
         }
     }
     operator fun invoke(): Flow<State> = flow {
-        syncRemoteProductsUseCase().collect { remoteState ->
-            when (remoteState) {
-                is DomainState.OnSuccess -> {
-                    emitLocalState()
-                }
-                is DomainState.OnFailed ->{
-                    emit(State.OnFailed(remoteState.error))
-                    delay(2000)
-                    emitLocalState()
+        emit(State.OnLoading)
+        try {
+            syncRemoteProductsUseCase().collect { remoteState ->
+                when (remoteState) {
+                    is DomainState.OnSuccess -> {
+                        emitLocalState()
+                    }
+                    is DomainState.OnFailed ->{
+                        emit(State.OnFailed(remoteState.error))
+                        delay(2000)
+                        emitLocalState()
+                    }
                 }
             }
+        }catch (ex:Exception){
+            emit(State.OnFailed(ex.message.toString()))
         }
+
     }
 }

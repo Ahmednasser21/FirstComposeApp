@@ -2,12 +2,13 @@ package com.sharja.ba.firstcomposeapp.products.presentation.productdetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.sharja.ba.firstcomposeapp.products.data.Repository
-import com.sharja.ba.firstcomposeapp.products.domain.MapperClass
+import com.sharja.ba.firstcomposeapp.products.data.di.MainDispatcher
+import com.sharja.ba.firstcomposeapp.products.domain.GetProductByIDUseCase
 import com.sharja.ba.firstcomposeapp.products.domain.UpdateFavouriteUseCase
 import com.sharja.ba.firstcomposeapp.products.presentation.BaseViewModule
 import com.sharja.ba.firstcomposeapp.products.presentation.State
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,9 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
-    private val repository: Repository,
+    private val getProductByIDUseCase: GetProductByIDUseCase,
     private val savedStateHandle: SavedStateHandle,
-    private val mapperClass: MapperClass,
+    @MainDispatcher private val dispatcher: CoroutineDispatcher,
     updateFavouriteUseCase: UpdateFavouriteUseCase
 ) : BaseViewModule(updateFavouriteUseCase) {
    private var _productDetailsState = MutableStateFlow<State>(State.OnLoading)
@@ -36,7 +37,7 @@ class ProductDetailsViewModel @Inject constructor(
         )
 
     private fun getProductById() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
 //          val id = savedStateHandle.get<Int>("product_id")?: 0
             val id = savedStateHandle["productId"] ?: 0
             if (id == 0) {
@@ -45,13 +46,12 @@ class ProductDetailsViewModel @Inject constructor(
                 return@launch
             }
 
-            repository.getProductById(id)
+            getProductByIDUseCase(id)
                 .catch { throwable ->
                     _productDetailsState.value = State.OnFailed(throwable.message.toString())
                 }
-                .collect { localProduct ->
-                    val product = mapperClass.mapLocalProductToProduct(localProduct)
-                    _productDetailsState.value = State.OnSuccess(listOf( product))
+                .collect { state ->
+                    _productDetailsState.value = state
                 }
         }
 
