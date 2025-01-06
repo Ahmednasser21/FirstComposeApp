@@ -49,9 +49,9 @@ fun ProductDetailsScreen(
                 Progressbar(paddingValues)
             }
 
-            is State.OnSuccess<*> -> {
-                val product = state.data as Product
-                ProductItem(product){id, isFav -> onFavClick(id,isFav) }
+            is State.OnSuccess -> {
+                val product = state.productList
+                ProductItem(product[0]){id, isFav -> onFavClick(id,isFav) }
             }
 
             is State.OnFailed -> {

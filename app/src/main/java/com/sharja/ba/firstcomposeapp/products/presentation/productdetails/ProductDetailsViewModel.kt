@@ -51,7 +51,7 @@ class ProductDetailsViewModel @Inject constructor(
                 }
                 .collect { localProduct ->
                     val product = mapperClass.mapLocalProductToProduct(localProduct)
-                    _productDetailsState.value = State.OnSuccess(product)
+                    _productDetailsState.value = State.OnSuccess(listOf( product))
                 }
         }
 

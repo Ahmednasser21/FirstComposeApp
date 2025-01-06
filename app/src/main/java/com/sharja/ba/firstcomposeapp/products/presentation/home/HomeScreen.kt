@@ -46,9 +46,9 @@ fun HomeScreen(
                 Progressbar(paddingValues)
             }
 
-            is State.OnSuccess<*> -> {
+            is State.OnSuccess -> {
                 ProductList(
-                    products = state.data as List<Product>,
+                    products = state.productList,
                     onItemClick = { onItemClick(it) },
                     onFavClick = { id,isFav ->
                        onFavClick(id,isFav)

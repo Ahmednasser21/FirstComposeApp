@@ -1,7 +1,6 @@
 package com.sharja.ba.firstcomposeapp.products.domain
 
 import com.sharja.ba.firstcomposeapp.products.data.Repository
-import com.sharja.ba.firstcomposeapp.products.presentation.State
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -10,15 +9,13 @@ import javax.inject.Singleton
 
 @Singleton
 class GetLocalProductsUseCase @Inject constructor(
-    private val repository: Repository,
-    private val mapperClass: MapperClass
+    private val repository: Repository
 ) {
-    operator fun invoke(): Flow<State> = flow {
+    operator fun invoke(): Flow<DomainState> = flow {
         repository.getAllLocalProducts().catch { throwable->
-            emit(State.OnFailed(throwable.message.toString()))
-        }.collect{productsList->
-            val products = mapperClass.mapLocalProductListToProductList(productsList)
-            emit(State.OnSuccess(products))
+            emit(DomainState.OnFailed(throwable.message.toString()))
+        }.collect{productList->
+            emit(DomainState.OnSuccess(productList))
         }
     }
 }
