@@ -19,7 +19,7 @@ class HomeViewModel @Inject constructor(
     updateFavouriteUseCase: UpdateFavouriteUseCase,
     private val syncAndGetLocalProductUseCase: SyncAndGetLocalProductUseCase,
     @MainDispatcher private val dispatcher: CoroutineDispatcher
-) : BaseViewModule(updateFavouriteUseCase) {
+) : BaseViewModule(updateFavouriteUseCase,dispatcher) {
     private val _productsState = MutableStateFlow<State>(State.OnLoading)
     val productsState =_productsState.asStateFlow()
     init {

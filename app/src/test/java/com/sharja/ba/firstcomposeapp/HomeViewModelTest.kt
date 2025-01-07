@@ -8,6 +8,7 @@ import com.sharja.ba.firstcomposeapp.products.domain.SyncRemoteProductsUseCase
 import com.sharja.ba.firstcomposeapp.products.domain.UpdateFavouriteUseCase
 import com.sharja.ba.firstcomposeapp.products.presentation.State
 import com.sharja.ba.firstcomposeapp.products.presentation.home.HomeViewModel
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -20,30 +21,53 @@ class HomeViewModelTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
 
-
     @Test
     fun loadingState_IsSetCorrectly() = scope.runTest {
 
-        val homeViewModel = getHomeViewModel()
+        val homeViewModel = getHomeViewModel(createRepo())
         val state = homeViewModel.productsState.value
-        assert(state == State.OnLoading)
+        assertEquals(state, State.OnLoading)
     }
 
     @Test
     fun loadedContentState_IsSetCorrectly() = scope.runTest {
-        val homeViewModel = getHomeViewModel()
+
+        val homeViewModel = getHomeViewModel(createRepo())
         advanceUntilIdle()
         val state = homeViewModel.productsState.value
-        assert(state == State.OnSuccess(DummyProductLists.getDummyProductsList()))
+        assertEquals(state, State.OnSuccess(DummyProductLists.getDummyProductsList()))
     }
 
+    @Test
+    fun toggleIsFav_IsSetCorrectly() = scope.runTest {
 
-    private fun getHomeViewModel(): HomeViewModel {
-
+        val testProductDao = TestProductDao()
         val repository = Repository(
             productService = TestProductService(),
-            localProductDao = TestProductDao()
+            localProductDao = testProductDao
         )
+        testProductDao.insertLocalProductsList(DummyProductLists.getDummyLocalProductsList())
+        val homeViewModel = getHomeViewModel(repository)
+
+        val testProduct = DummyProductLists.getDummyLocalProductsList()[0]
+        val isFav = testProduct.isFav
+
+        homeViewModel.toggleFavourite(testProduct.id, isFav)
+        advanceUntilIdle()
+
+        testProductDao.getProductByID(testProduct.id).collect {
+            assertEquals(it.isFav, !isFav)
+        }
+
+    }
+
+    private fun createRepo(): Repository = Repository(
+        productService = TestProductService(),
+        localProductDao = TestProductDao()
+    )
+
+    private fun getHomeViewModel(repository: Repository): HomeViewModel {
+
         val updateFavouriteUseCase = UpdateFavouriteUseCase(repository)
         val mapperClass = MapperClass()
         val syncRemoteProductsUseCase = SyncRemoteProductsUseCase(repository, mapperClass)
