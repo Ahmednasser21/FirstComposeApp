@@ -47,9 +47,9 @@ class HomeViewModelTest {
             localProductDao = testProductDao
         )
         testProductDao.insertLocalProductsList(DummyProductLists.getDummyLocalProductsList())
-        advanceUntilIdle()
+        
         val homeViewModel = getHomeViewModel(repository)
-        advanceUntilIdle()
+
         val testProduct = DummyProductLists.getDummyLocalProductsList()[0]
         val isFav = testProduct.isFav
 
