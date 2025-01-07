@@ -20,9 +20,9 @@ class TestProductDao : LocalProductDao {
     }
 
     override suspend fun updateFavoriteStatus(productId: Int, isFav: Boolean) {
-        val product = localProductsMap[productId]
-        val updatedProduct = product?.copy(isFav = !product.isFav)
-        localProductsMap.replace(productId, updatedProduct ?: LocalProduct())
+        localProductsMap[productId]?.let { product ->
+            localProductsMap[productId] = product.copy(isFav = isFav)
+        }
     }
 
     override fun getAllLocalProducts(): Flow<List<LocalProduct>> = flow {

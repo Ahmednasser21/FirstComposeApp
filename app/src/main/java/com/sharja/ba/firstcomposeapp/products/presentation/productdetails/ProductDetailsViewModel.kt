@@ -24,7 +24,7 @@ class ProductDetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     @MainDispatcher private val dispatcher: CoroutineDispatcher,
     updateFavouriteUseCase: UpdateFavouriteUseCase
-) : BaseViewModule(updateFavouriteUseCase) {
+) : BaseViewModule(updateFavouriteUseCase,dispatcher) {
    private var _productDetailsState = MutableStateFlow<State>(State.OnLoading)
     val productDetailsState = _productDetailsState.asStateFlow()
         .onStart {
