@@ -41,12 +41,12 @@ class HomeViewModelTest {
     @Test
     fun toggleIsFav_IsSetCorrectly() = scope.runTest {
 
-        val testProductDao = TestProductDao()
+        val fakeProductDao = FakeProductDao()
         val repository = Repository(
-            productService = TestProductService(),
-            localProductDao = testProductDao
+            productService = FakeProductService(),
+            localProductDao = fakeProductDao
         )
-        testProductDao.insertLocalProductsList(DummyProductLists.getDummyLocalProductsList())
+        fakeProductDao.insertLocalProductsList(DummyProductLists.getDummyLocalProductsList())
         
         val homeViewModel = getHomeViewModel(repository)
 
@@ -56,15 +56,15 @@ class HomeViewModelTest {
         homeViewModel.toggleFavourite(testProduct.id, isFav)
         advanceUntilIdle()
 
-        testProductDao.getProductByID(testProduct.id).collect {
+        fakeProductDao.getProductByID(testProduct.id).collect {
             assertEquals(it.isFav, !isFav)
         }
 
     }
 
     private fun createRepo(): Repository = Repository(
-        productService = TestProductService(),
-        localProductDao = TestProductDao()
+        productService = FakeProductService(),
+        localProductDao = FakeProductDao()
     )
 
     private fun getHomeViewModel(repository: Repository): HomeViewModel {

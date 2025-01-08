@@ -4,7 +4,7 @@ import com.sharja.ba.firstcomposeapp.products.data.remote.ProductResponse
 import com.sharja.ba.firstcomposeapp.products.data.remote.ProductService
 import com.sharja.ba.firstcomposeapp.products.data.remote.RemoteProduct
 
-class TestProductService: ProductService {
+class FakeProductService: ProductService {
     override suspend fun getRemoteProducts(): ProductResponse {
         val productsList = DummyProductLists.getDummyRemoteProductList()
         return ProductResponse(productsList)

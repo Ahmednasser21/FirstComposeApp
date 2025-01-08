@@ -5,7 +5,7 @@ import com.sharja.ba.firstcomposeapp.products.data.local.LocalProductDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class TestProductDao : LocalProductDao {
+class FakeProductDao : LocalProductDao {
     private val localProductsMap = HashMap<Int, LocalProduct>()
     override suspend fun insertLocalProductsList(localProductsList: List<LocalProduct>) {
         localProductsList.forEach {

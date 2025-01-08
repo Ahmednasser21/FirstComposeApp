@@ -17,17 +17,17 @@ class UpdateFavoriteUseCaseTest {
 
     @Test
     fun updateFavState_IsSetCorrectly() = scope.runTest {
-        val testProductDao = TestProductDao()
+        val fakeProductDao = FakeProductDao()
         val updateFavouriteUseCase = UpdateFavouriteUseCase(
-            Repository( TestProductService(),testProductDao)
+            Repository( FakeProductService(),fakeProductDao)
         )
         val productUnderTest = DummyProductLists.getDummyLocalProductsList()[0]
         val isFav = productUnderTest.isFav
-        testProductDao.insertLocalProductsList(DummyProductLists.getDummyLocalProductsList())
+        fakeProductDao.insertLocalProductsList(DummyProductLists.getDummyLocalProductsList())
         advanceUntilIdle()
         updateFavouriteUseCase(productUnderTest.id,isFav)
         advanceUntilIdle()
-        testProductDao.getProductByID(productUnderTest.id).collect{updatedProduct->
+        fakeProductDao.getProductByID(productUnderTest.id).collect{ updatedProduct->
             assertEquals(updatedProduct.isFav,!isFav)
         }
 
