@@ -7,12 +7,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Entity(tableName = "FavProducts")
 data class LocalProduct(
-   @PrimaryKey val id: Int = 0,
+    @PrimaryKey val id: Int = 0,
     val title: String = "",
-    val description: String= "",
-    val price: String= "",
+    val description: String = "",
+    val price: String = "",
     val rating: String = "",
-    val brand: String= "",
+    val brand: String = "",
     val images: String = "",
-    val isFav:Boolean = false
+    val isFav: Boolean = false
 )

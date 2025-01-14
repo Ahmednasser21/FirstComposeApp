@@ -19,15 +19,13 @@ class GetProductByIDUseCase @Inject constructor(
         try {
             repository.getProductById(productId).map { localProduct ->
                 State.OnSuccess(listOf(mapperClass.mapLocalProductToProduct(localProduct)))
+            }.catch {
+                emit(State.OnFailed(it.message.toString()))
+            }.collect {
+                emit(it)
             }
-                .catch {
-                    emit(State.OnFailed(it.message.toString()))
-                }.collect {
-                    emit(it)
-                }
         } catch (ex: Exception) {
             emit(State.OnFailed(ex.message.toString()))
         }
-
     }
 }

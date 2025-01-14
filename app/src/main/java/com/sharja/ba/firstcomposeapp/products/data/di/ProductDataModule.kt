@@ -21,10 +21,8 @@ object ProductDataModule {
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://dummyjson.com/")
-            .build()
+        return Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("https://dummyjson.com/").build()
     }
 
     @Singleton
@@ -34,10 +32,9 @@ object ProductDataModule {
     ): ProductService {
         return retrofit.create(ProductService::class.java)
     }
+
     @Synchronized
-
     @Singleton
-
     @Provides
     fun provideRoomDb(
         @ApplicationContext context: Context
@@ -46,8 +43,7 @@ object ProductDataModule {
             context,
             LocalProductsDatabase::class.java,
             "fav_products_database"
-        ).fallbackToDestructiveMigration()
-            .build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Singleton

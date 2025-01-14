@@ -17,7 +17,6 @@ class Repository @Inject constructor(
 ) {
     fun getRemoteProductsList(): Flow<ProductResponse> = flow {
         emit(productService.getRemoteProducts())
-
     }
 
     fun getRemoteProductByID(id: Int): Flow<RemoteProduct> = flow {
@@ -34,5 +33,6 @@ class Repository @Inject constructor(
         localProductDao.updateFavoriteStatus(productId, isFav)
     }
 
-    fun getProductById(productId: Int): Flow<LocalProduct> = localProductDao.getProductByID(productId)
+    fun getProductById(productId: Int): Flow<LocalProduct> =
+        localProductDao.getProductByID(productId)
 }

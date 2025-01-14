@@ -40,15 +40,17 @@ fun Progressbar(paddingValues: PaddingValues) {
     ) {
         CircularProgressIndicator(
             modifier = Modifier.semantics {
-                this.contentDescription= SemanticsDescription.HOME_lOADING
+                this.contentDescription = SemanticsDescription.HOME_lOADING
             }
         )
     }
 }
 
 @Composable
-fun ErrorSnackbar(snackbarHostState: SnackbarHostState, error: String?) {
-
+fun ErrorSnackbar(
+    snackbarHostState: SnackbarHostState,
+    error: String?
+) {
     LaunchedEffect(snackbarHostState) {
         snackbarHostState.showSnackbar(
             message = error.toString(),
@@ -61,7 +63,7 @@ fun ErrorSnackbar(snackbarHostState: SnackbarHostState, error: String?) {
 fun FavouriteIcon(
     localProduct: Product,
     modifier: Modifier,
-    onFavClick: (id:Int,isFav:Boolean) -> Unit
+    onFavClick: (id: Int, isFav: Boolean) -> Unit
 ) {
     Icon(
         imageVector = if (localProduct.isFav) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
@@ -69,8 +71,12 @@ fun FavouriteIcon(
         tint = if (localProduct.isFav) Color.Red else Color.Black,
         modifier = modifier
             .clickable {
-                onFavClick(localProduct.id, localProduct.isFav)
-            }.testTag("fav_icon_${localProduct.id}")
+                onFavClick(
+                    localProduct.id,
+                    localProduct.isFav
+                )
+            }
+            .testTag("fav_icon_${localProduct.id}")
     )
 }
 
@@ -99,7 +105,7 @@ fun ProductImage(
                 modifier = modifier,
                 contentDescription = "Product image",
                 contentScale = ContentScale.Fit,
-                alignment = Alignment.Center,
+                alignment = Alignment.Center
             )
         }
     }

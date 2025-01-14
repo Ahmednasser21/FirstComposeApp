@@ -33,50 +33,50 @@ class HomeScreenTest {
             .assertIsDisplayed()
     }
 
-
     @Test
-    fun errorState_IsActive(){
+    fun errorState_IsActive() {
         val errorMsg = "Error"
-        testRule.setContent{
+        testRule.setContent {
             FirstComposeAppTheme {
                 HomeScreen(
                     state = State.OnFailed(errorMsg),
                     onItemClick = {},
-                    onFavClick = {_:Int,_:Boolean->}
+                    onFavClick = { _: Int, _: Boolean -> }
                 )
             }
-
         }
         testRule.onNodeWithText(errorMsg).assertIsDisplayed()
-        testRule.onNodeWithContentDescription(SemanticsDescription.HOME_lOADING).assertDoesNotExist()
+        testRule.onNodeWithContentDescription(SemanticsDescription.HOME_lOADING)
+            .assertDoesNotExist()
     }
 
     @Test
-    fun onSuccess_IsActive(){
+    fun onSuccess_IsActive() {
         val dummyProductList = DummyProductsList.getDummyProductsList()
-        testRule.setContent{
+        testRule.setContent {
             FirstComposeAppTheme {
                 HomeScreen(
                     state = State.OnSuccess(dummyProductList),
                     onItemClick = {},
-                    onFavClick = {_:Int,_:Boolean->}
+                    onFavClick = { _: Int, _: Boolean -> }
                 )
             }
         }
         testRule.onNodeWithText(dummyProductList[0].title).assertIsDisplayed()
-        testRule.onNodeWithContentDescription(SemanticsDescription.HOME_lOADING).assertDoesNotExist()
+        testRule.onNodeWithContentDescription(SemanticsDescription.HOME_lOADING)
+            .assertDoesNotExist()
     }
 
     @Test
-    fun onItemClicked_idIsPassedCorrectly(){
+    fun onItemClicked_idIsPassedCorrectly() {
         val dummyProductList = DummyProductsList.getDummyProductsList()
         val productItem = dummyProductList[0]
         testRule.setContent {
             FirstComposeAppTheme {
                 HomeScreen(
                     state = State.OnSuccess(dummyProductList),
-                    onFavClick = {_:Int,_:Boolean->},
-                    onItemClick = {id:Int->
+                    onFavClick = { _: Int, _: Boolean -> },
+                    onItemClick = { id: Int ->
                         assert(id == productItem.id)
                     }
                 )
@@ -86,7 +86,7 @@ class HomeScreenTest {
     }
 
     @Test
-    fun onFavClick_idAndIsFavArePassedCorrectly(){
+    fun onFavClick_idAndIsFavArePassedCorrectly() {
         val dummyProductList = DummyProductsList.getDummyProductsList()
         val productItem = dummyProductList[0]
         testRule.setContent {
@@ -94,7 +94,7 @@ class HomeScreenTest {
                 HomeScreen(
                     state = State.OnSuccess(dummyProductList),
                     onItemClick = {},
-                    onFavClick = {id:Int,isFav:Boolean->
+                    onFavClick = { id: Int, isFav: Boolean ->
                         assert(id == productItem.id && isFav == productItem.isFav)
                     }
                 )
@@ -103,4 +103,3 @@ class HomeScreenTest {
         testRule.onNodeWithTag("fav_icon_${productItem.id}").performClick()
     }
 }
-

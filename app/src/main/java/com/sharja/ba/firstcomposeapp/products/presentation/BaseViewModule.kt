@@ -7,14 +7,14 @@ import com.sharja.ba.firstcomposeapp.products.domain.UpdateFavouriteUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModule (
+abstract class BaseViewModule(
     private val updateFavouriteUseCase: UpdateFavouriteUseCase,
     @MainDispatcher private val dispatcher: CoroutineDispatcher
-):ViewModel() {
+) : ViewModel() {
 
-    fun toggleFavourite(productId:Int,isFav:Boolean){
+    fun toggleFavourite(productId: Int, isFav: Boolean) {
         viewModelScope.launch(dispatcher) {
-           updateFavouriteUseCase(productId,isFav)
+            updateFavouriteUseCase(productId, isFav)
         }
     }
 }

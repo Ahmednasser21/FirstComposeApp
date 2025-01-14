@@ -1,6 +1,5 @@
 package com.sharja.ba.firstcomposeapp.products.domain
 
-
 data class Product(
     val id: Int = 0,
     val title: String = "",

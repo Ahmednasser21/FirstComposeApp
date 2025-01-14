@@ -21,16 +21,14 @@ class SyncRemoteProductsUseCase @Inject constructor(
                         productResponse.products
                     )
                 )
+            }.catch {
+                emit(DomainState.OnFailed("No internet connection\nFailed to updated local data"))
+            }.collect {
+                repository.insertLocalProduct(it.localProductList)
+                emit(it)
             }
-                .catch {
-                    emit(DomainState.OnFailed("No internet connection\nFailed to updated local data"))
-                }.collect {
-                    repository.insertLocalProduct(it.localProductList)
-                    emit(it)
-                }
-        }catch (ex:Exception){
+        } catch (ex: Exception) {
             emit(DomainState.OnFailed(ex.message.toString()))
         }
-
     }
 }

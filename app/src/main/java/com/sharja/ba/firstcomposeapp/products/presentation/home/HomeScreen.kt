@@ -29,18 +29,15 @@ import com.sharja.ba.firstcomposeapp.products.presentation.Progressbar
 import com.sharja.ba.firstcomposeapp.products.presentation.State
 import com.sharja.ba.firstcomposeapp.theme.Typography
 
-
 @Composable
 fun HomeScreen(
     state: State,
     onItemClick: (Int) -> Unit,
-    onFavClick: (id:Int,isFav:Boolean) -> Unit
+    onFavClick: (id: Int, isFav: Boolean) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ) { paddingValues ->
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { paddingValues ->
         when (state) {
             is State.OnLoading -> {
                 Progressbar(paddingValues)
@@ -50,9 +47,10 @@ fun HomeScreen(
                 ProductList(
                     products = state.productList,
                     onItemClick = { onItemClick(it) },
-                    onFavClick = { id,isFav ->
-                       onFavClick(id,isFav)
-                    })
+                    onFavClick = { id, isFav ->
+                        onFavClick(id, isFav)
+                    }
+                )
             }
 
             is State.OnFailed -> {
@@ -67,14 +65,15 @@ fun HomeScreen(
 fun ProductList(
     products: List<Product>,
     onItemClick: (productId: Int) -> Unit,
-    onFavClick: (id:Int,isFav:Boolean) -> Unit
+    onFavClick: (id: Int, isFav: Boolean) -> Unit
 ) {
     LazyColumn {
         items(products) { favProduct ->
             ProductItem(
                 product = favProduct,
                 onItemClick = { onItemClick(it) },
-                onFavClick = { id,isFav->onFavClick(id,isFav)})
+                onFavClick = { id, isFav -> onFavClick(id, isFav) }
+            )
         }
     }
 }
@@ -84,7 +83,7 @@ fun ProductItem(
     product: Product,
     modifier: Modifier = Modifier,
     onItemClick: (productId: Int) -> Unit,
-    onFavClick: (id:Int,isFav:Boolean) -> Unit
+    onFavClick: (id: Int, isFav: Boolean) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -123,9 +122,7 @@ fun ProductItem(
                 modifier
                     .padding(0.dp, 16.dp, 16.dp, 16.dp)
                     .weight(1f)
-            ){id,isFav->onFavClick(id,isFav)}
-
+            ) { id, isFav -> onFavClick(id, isFav) }
         }
-
     }
 }

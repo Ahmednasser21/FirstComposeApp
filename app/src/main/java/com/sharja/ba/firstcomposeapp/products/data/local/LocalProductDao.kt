@@ -13,7 +13,7 @@ interface LocalProductDao {
     suspend fun insertLocalProductsList(localProductsList: List<LocalProduct>)
 
     @Query("SELECT * FROM FavProducts WHERE id = :productId")
-    fun getProductByID(productId:Int):Flow<LocalProduct>
+    fun getProductByID(productId: Int): Flow<LocalProduct>
 
     @Query("UPDATE FavProducts SET isFav = :isFav WHERE id = :productId")
     suspend fun updateFavoriteStatus(productId: Int, isFav: Boolean)

@@ -13,21 +13,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     updateFavouriteUseCase: UpdateFavouriteUseCase,
     private val syncAndGetLocalProductUseCase: SyncAndGetLocalProductUseCase,
     @MainDispatcher private val dispatcher: CoroutineDispatcher
-) : BaseViewModule(updateFavouriteUseCase,dispatcher) {
+) : BaseViewModule(updateFavouriteUseCase, dispatcher) {
     private val _productsState = MutableStateFlow<State>(State.OnLoading)
-    val productsState =_productsState.asStateFlow()
+    val productsState = _productsState.asStateFlow()
+
     init {
         getProductList()
     }
 
     private fun getProductList() {
-        viewModelScope.launch (dispatcher){
+        viewModelScope.launch(dispatcher) {
             syncAndGetLocalProductUseCase().collect { result ->
                 _productsState.value = result
             }

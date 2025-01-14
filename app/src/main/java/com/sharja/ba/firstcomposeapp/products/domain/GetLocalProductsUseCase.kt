@@ -12,9 +12,9 @@ class GetLocalProductsUseCase @Inject constructor(
     private val repository: Repository
 ) {
     operator fun invoke(): Flow<DomainState> = flow {
-        repository.getAllLocalProducts().catch { throwable->
+        repository.getAllLocalProducts().catch { throwable ->
             emit(DomainState.OnFailed(throwable.message.toString()))
-        }.collect{productList->
+        }.collect { productList ->
             emit(DomainState.OnSuccess(productList))
         }
     }

@@ -16,14 +16,16 @@ class SyncAndGetLocalProductUseCase @Inject constructor(
 ) {
     private suspend fun FlowCollector<State>.emitLocalState() {
         getLocalProductsUseCase().collect { localState ->
-            if (localState is DomainState.OnSuccess){
-                val productList =mapperClass.mapLocalProductListToProductList(localState.localProductList)
+            if (localState is DomainState.OnSuccess) {
+                val productList =
+                    mapperClass.mapLocalProductListToProductList(localState.localProductList)
                 emit(State.OnSuccess(productList))
-            }else if (localState is DomainState.OnFailed){
+            } else if (localState is DomainState.OnFailed) {
                 emit(State.OnFailed(localState.error))
             }
         }
     }
+
     operator fun invoke(): Flow<State> = flow {
         emit(State.OnLoading)
         try {
@@ -32,16 +34,16 @@ class SyncAndGetLocalProductUseCase @Inject constructor(
                     is DomainState.OnSuccess -> {
                         emitLocalState()
                     }
-                    is DomainState.OnFailed ->{
+
+                    is DomainState.OnFailed -> {
                         emit(State.OnFailed(remoteState.error))
                         delay(2000)
                         emitLocalState()
                     }
                 }
             }
-        }catch (ex:Exception){
+        } catch (ex: Exception) {
             emit(State.OnFailed(ex.message.toString()))
         }
-
     }
 }

@@ -38,20 +38,18 @@ import com.sharja.ba.firstcomposeapp.theme.Typography
 @Composable
 fun ProductDetailsScreen(
     state: State,
-    onFavClick: (id:Int, isFav:Boolean) -> Unit
+    onFavClick: (id: Int, isFav: Boolean) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ) { paddingValues ->
-        when ( state ) {
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { paddingValues ->
+        when (state) {
             is State.OnLoading -> {
                 Progressbar(paddingValues)
             }
 
             is State.OnSuccess -> {
                 val product = state.productList
-                ProductItem(product[0]){id, isFav -> onFavClick(id,isFav) }
+                ProductItem(product[0]) { id, isFav -> onFavClick(id, isFav) }
             }
 
             is State.OnFailed -> {
@@ -60,11 +58,14 @@ fun ProductDetailsScreen(
             }
         }
     }
-
 }
 
 @Composable
-fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (id:Int,isFav:Boolean) -> Unit) {
+fun ProductItem(
+    product: Product,
+    modifier: Modifier = Modifier,
+    onFavClick: (id: Int, isFav: Boolean) -> Unit
+) {
     val rating = Math.round(product.rating.toFloat())
 
     Column(
@@ -78,7 +79,7 @@ fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (id
             modifier = modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
-                .height(LocalConfiguration.current.screenHeightDp.dp * 0.6f),
+                .height(LocalConfiguration.current.screenHeightDp.dp * 0.6f)
         )
         Text(
             text = product.title,
@@ -98,16 +99,14 @@ fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (id
                 text = "Brand: ${product.brand}",
                 textAlign = TextAlign.Start,
                 fontSize = Typography.titleMedium.fontSize,
-                modifier = modifier
-                    .weight(3f)
+                modifier = modifier.weight(3f)
 
             )
             Text(
                 text = "Price: ${product.price}$",
                 textAlign = TextAlign.End,
                 fontSize = Typography.titleMedium.fontSize,
-                modifier = modifier
-                    .weight(2f)
+                modifier = modifier.weight(2f)
             )
         }
 
@@ -116,7 +115,7 @@ fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (id
             modifier = modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 16.dp),
-            textAlign = TextAlign.Start,
+            textAlign = TextAlign.Start
         )
 
         Row(
@@ -131,14 +130,16 @@ fun ProductItem(product: Product, modifier: Modifier = Modifier, onFavClick: (id
                 textAlign = TextAlign.Start,
                 modifier = modifier
             )
-            RatingBar(rating, modifier = modifier)
+            RatingBar(
+                rating,
+                modifier = modifier
+            )
             Spacer(modifier = Modifier.weight(1f))
             FavouriteIcon(
                 product,
                 modifier
-            ){id,isFav-> onFavClick(id,isFav)}
+            ) { id, isFav -> onFavClick(id, isFav) }
         }
-
     }
 }
 
@@ -156,14 +157,12 @@ fun RatingBar(
                 imageVector = if (i <= rating) Icons.Filled.Star else Icons.Outlined.Star,
                 contentDescription = null,
                 tint = if (i <= rating) Color.Yellow else Color.Black,
-                modifier = modifier
-                    .size(24.dp)
+                modifier = modifier.size(24.dp)
             )
         }
     }
     Text(
         text = "($rating)",
-        fontSize = 14.sp,
-
-        )
+        fontSize = 14.sp
+    )
 }

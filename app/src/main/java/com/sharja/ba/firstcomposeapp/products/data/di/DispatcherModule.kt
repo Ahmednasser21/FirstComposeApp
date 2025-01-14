@@ -16,7 +16,6 @@ annotation class MainDispatcher
 @Retention(AnnotationRetention.BINARY)
 annotation class IODispatcher
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object DispatcherModule {

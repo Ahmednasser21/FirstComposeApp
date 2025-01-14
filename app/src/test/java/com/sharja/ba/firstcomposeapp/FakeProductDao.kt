@@ -28,6 +28,4 @@ class FakeProductDao : LocalProductDao {
     override fun getAllLocalProducts(): Flow<List<LocalProduct>> = flow {
         emit(localProductsMap.values.toList())
     }
-
-
 }

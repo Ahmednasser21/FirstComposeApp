@@ -9,11 +9,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sharja.ba.firstcomposeapp.theme.FirstComposeAppTheme
 import com.sharja.ba.firstcomposeapp.products.presentation.home.HomeScreen
 import com.sharja.ba.firstcomposeapp.products.presentation.home.HomeViewModel
 import com.sharja.ba.firstcomposeapp.products.presentation.productdetails.ProductDetailsScreen
 import com.sharja.ba.firstcomposeapp.products.presentation.productdetails.ProductDetailsViewModel
+import com.sharja.ba.firstcomposeapp.theme.FirstComposeAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
 
@@ -54,20 +54,16 @@ fun DummyProductsApp() {
 }*/
 @Composable
 fun DummyProductsAppNewNav() {
-
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Home) {
-
         composable<Home> {
             val homeViewModel: HomeViewModel = hiltViewModel()
-            HomeScreen(homeViewModel.productsState.collectAsState().value,
-                { productId ->
+            HomeScreen(homeViewModel.productsState.collectAsState().value, { productId ->
 //                val productJson = Json.encodeToString(product)
-                    navController.navigate(ProductDetails(productId))
-                }, { productId, isFav ->
-                    homeViewModel.toggleFavourite(productId, isFav)
-                }
-            )
+                navController.navigate(ProductDetails(productId))
+            }, { productId, isFav ->
+                homeViewModel.toggleFavourite(productId, isFav)
+            })
         }
 
         composable<ProductDetails> {
@@ -89,10 +85,10 @@ object Home
 @Serializable
 data class ProductDetails(val productId: Int)
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun GreetingPreview() {
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// fun GreetingPreview() {
 //    FirstComposeAppTheme {
 //        HomeScreen()
 //    }
-//}
+// }

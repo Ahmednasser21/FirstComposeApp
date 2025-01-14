@@ -34,15 +34,14 @@ class MapperClass @Inject constructor() {
         }
     }
 
-    fun mapLocalProductToProduct(localProduct: LocalProduct): Product =
-        Product(
-            localProduct.id,
-            localProduct.title,
-            localProduct.description,
-            localProduct.price,
-            localProduct.rating,
-            localProduct.brand,
-            localProduct.images,
-            localProduct.isFav
-        )
+    fun mapLocalProductToProduct(localProduct: LocalProduct): Product = Product(
+        localProduct.id,
+        localProduct.title,
+        localProduct.description,
+        localProduct.price,
+        localProduct.rating,
+        localProduct.brand,
+        localProduct.images,
+        localProduct.isFav
+    )
 }

@@ -23,7 +23,6 @@ class HomeViewModelTest {
 
     @Test
     fun loadingState_IsSetCorrectly() = scope.runTest {
-
         val homeViewModel = getHomeViewModel(createRepo())
         val state = homeViewModel.productsState.value
         assertEquals(state, State.OnLoading)
@@ -31,7 +30,6 @@ class HomeViewModelTest {
 
     @Test
     fun loadedContentState_IsSetCorrectly() = scope.runTest {
-
         val homeViewModel = getHomeViewModel(createRepo())
         advanceUntilIdle()
         val state = homeViewModel.productsState.value
@@ -40,16 +38,14 @@ class HomeViewModelTest {
 
     @Test
     fun toggleIsFav_IsSetCorrectly() = scope.runTest {
-
         val fakeProductDao = FakeProductDao()
         val repository = Repository(
             productService = FakeProductService(),
             localProductDao = fakeProductDao
         )
         fakeProductDao.insertLocalProductsList(DummyProductLists.getDummyLocalProductsList())
-        
-        val homeViewModel = getHomeViewModel(repository)
 
+        val homeViewModel = getHomeViewModel(repository)
         val testProduct = DummyProductLists.getDummyLocalProductsList()[0]
         val isFav = testProduct.isFav
 
@@ -59,7 +55,6 @@ class HomeViewModelTest {
         fakeProductDao.getProductByID(testProduct.id).collect {
             assertEquals(it.isFav, !isFav)
         }
-
     }
 
     private fun createRepo(): Repository = Repository(
@@ -68,7 +63,6 @@ class HomeViewModelTest {
     )
 
     private fun getHomeViewModel(repository: Repository): HomeViewModel {
-
         val updateFavouriteUseCase = UpdateFavouriteUseCase(repository)
         val mapperClass = MapperClass()
         val syncRemoteProductsUseCase = SyncRemoteProductsUseCase(repository, mapperClass)
@@ -85,5 +79,4 @@ class HomeViewModelTest {
             dispatcher = dispatcher
         )
     }
-
 }

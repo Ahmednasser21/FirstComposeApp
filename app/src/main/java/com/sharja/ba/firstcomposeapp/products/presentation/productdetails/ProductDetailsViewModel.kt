@@ -24,36 +24,33 @@ class ProductDetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     @MainDispatcher private val dispatcher: CoroutineDispatcher,
     updateFavouriteUseCase: UpdateFavouriteUseCase
-) : BaseViewModule(updateFavouriteUseCase,dispatcher) {
-   private var _productDetailsState = MutableStateFlow<State>(State.OnLoading)
-    val productDetailsState = _productDetailsState.asStateFlow()
-        .onStart {
-            getProductById()
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Lazily,
-            State.OnLoading
-        )
+) : BaseViewModule(
+    updateFavouriteUseCase,
+    dispatcher
+) {
+    private var _productDetailsState = MutableStateFlow<State>(State.OnLoading)
+    val productDetailsState = _productDetailsState.asStateFlow().onStart {
+        getProductById()
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.Lazily,
+        State.OnLoading
+    )
 
     private fun getProductById() {
         viewModelScope.launch(dispatcher) {
 //          val id = savedStateHandle.get<Int>("product_id")?: 0
             val id = savedStateHandle["productId"] ?: 0
             if (id == 0) {
-                _productDetailsState.value =
-                    State.OnFailed("Product ID is missing or invalid.")
+                _productDetailsState.value = State.OnFailed("Product ID is missing or invalid.")
                 return@launch
             }
 
-            getProductByIDUseCase(id)
-                .catch { throwable ->
-                    _productDetailsState.value = State.OnFailed(throwable.message.toString())
-                }
-                .collect { state ->
-                    _productDetailsState.value = state
-                }
+            getProductByIDUseCase(id).catch { throwable ->
+                _productDetailsState.value = State.OnFailed(throwable.message.toString())
+            }.collect { state ->
+                _productDetailsState.value = state
+            }
         }
-
     }
 }
