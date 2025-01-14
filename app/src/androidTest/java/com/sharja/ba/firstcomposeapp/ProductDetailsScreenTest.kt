@@ -56,7 +56,7 @@ class ProductDetailsScreenTest {
         testRrule.setContent {
             FirstComposeAppTheme {
                 ProductDetailsScreen(
-                    state = State.OnSuccess(product),
+                    state = State.OnSuccess(DummyProductsList.getDummyProductsList()),
                     onFavClick = { _: Int, _: Boolean -> }
                 )
             }
@@ -72,7 +72,7 @@ class ProductDetailsScreenTest {
         testRrule.setContent {
             FirstComposeAppTheme {
                 ProductDetailsScreen(
-                    state = State.OnSuccess(product),
+                    state = State.OnSuccess(DummyProductsList.getDummyProductsList()),
                     onFavClick = { id: Int, isFav: Boolean ->
                         assert(id == product.id && isFav == product.isFav)
                     }

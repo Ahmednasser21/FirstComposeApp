@@ -7,7 +7,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.sharja.ba.firstcomposeapp.products.domain.Product
 import com.sharja.ba.firstcomposeapp.products.presentation.SemanticsDescription
 import com.sharja.ba.firstcomposeapp.products.presentation.State
 import com.sharja.ba.firstcomposeapp.products.presentation.home.HomeScreen
@@ -28,7 +27,6 @@ class HomeScreenTest {
                     onFavClick = { _: Int, _: Boolean -> },
                     onItemClick = {}
                 )
-
             }
         }
         testRule.onNodeWithContentDescription(SemanticsDescription.HOME_lOADING)
@@ -39,7 +37,7 @@ class HomeScreenTest {
     @Test
     fun errorState_IsActive(){
         val errorMsg = "Error"
-        testRule.setContent {
+        testRule.setContent{
             FirstComposeAppTheme {
                 HomeScreen(
                     state = State.OnFailed(errorMsg),
@@ -47,19 +45,19 @@ class HomeScreenTest {
                     onFavClick = {_:Int,_:Boolean->}
                 )
             }
+
         }
         testRule.onNodeWithText(errorMsg).assertIsDisplayed()
         testRule.onNodeWithContentDescription(SemanticsDescription.HOME_lOADING).assertDoesNotExist()
-
     }
 
     @Test
     fun onSuccess_IsActive(){
         val dummyProductList = DummyProductsList.getDummyProductsList()
-        testRule.setContent {
+        testRule.setContent{
             FirstComposeAppTheme {
                 HomeScreen(
-                    state = State.OnSuccess<List<Product>>(dummyProductList),
+                    state = State.OnSuccess(dummyProductList),
                     onItemClick = {},
                     onFavClick = {_:Int,_:Boolean->}
                 )
@@ -76,10 +74,10 @@ class HomeScreenTest {
         testRule.setContent {
             FirstComposeAppTheme {
                 HomeScreen(
-                    state = State.OnSuccess<List<Product>>(dummyProductList),
+                    state = State.OnSuccess(dummyProductList),
                     onFavClick = {_:Int,_:Boolean->},
                     onItemClick = {id:Int->
-                        assert(id==productItem.id)
+                        assert(id == productItem.id)
                     }
                 )
             }
@@ -94,7 +92,7 @@ class HomeScreenTest {
         testRule.setContent {
             FirstComposeAppTheme {
                 HomeScreen(
-                    state = State.OnSuccess<List<Product>>(dummyProductList),
+                    state = State.OnSuccess(dummyProductList),
                     onItemClick = {},
                     onFavClick = {id:Int,isFav:Boolean->
                         assert(id == productItem.id && isFav == productItem.isFav)

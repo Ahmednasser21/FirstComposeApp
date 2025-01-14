@@ -23,9 +23,9 @@ object DispatcherModule {
 
     @MainDispatcher
     @Provides
-    fun providesMainDispatcher():CoroutineDispatcher =Dispatchers.Main
+    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
     @IODispatcher
     @Provides
-    fun providesIODispatcher():CoroutineDispatcher = Dispatchers.IO
+    fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 }
