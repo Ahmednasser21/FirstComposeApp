@@ -30,7 +30,9 @@ jobs:
 
       - name: Check out the code
         uses: actions/checkout@v4
-      
+      - name: Grant execute permission for Gradlew 
+        run: chmod +x ./gradlew
+        
       - name: Run Unit Tests with Gradle
         run: ./gradlew test
 
