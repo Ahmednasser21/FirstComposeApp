@@ -22,5 +22,20 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Run Unit Tests with Gradle
-      run: ./gradlew test
+      
+  unit-tests:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out the code
+        run: actions/checkout@v4
+      
+      - name: Run Unit Tests with Gradle
+        run: ./gradlew test
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-tests-report
+          path: app/build/reports/tests/testDebugUnitTest/
