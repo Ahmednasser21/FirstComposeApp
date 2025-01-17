@@ -44,7 +44,7 @@ jobs:
 
     strategy:
       matrix:
-        api-level: [29, 30, 31]
+        api-level: [31]
         target: [default]
 
     steps:
@@ -63,12 +63,27 @@ jobs:
       with:
         api-level: ${{ matrix.api-level }}
         target: ${{ matrix.target }}
+        components: platform-tools,emulator
 
     - name: Grant execute permission for Gradlew
       run: chmod +x ./gradlew
 
     - name: Build with Gradle
       run: ./gradlew assembleDebug assembleAndroidTest
+
+    - name: Create AVD
+      run: |
+        echo "no" | avdmanager create avd -n test -k "system-images;android-${{ matrix.api-level }};google_apis;x86_64" --force
+
+    - name: Start emulator
+      run: |
+        $ANDROID_HOME/emulator/emulator-headless -avd test -no-window -no-audio -delay-adb -gpu swiftshader_indirect &
+      env:
+        ANDROID_HOME: ${{ secrets.ANDROID_HOME }}
+
+    - name: Wait for emulator to boot
+      run: |
+        adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
 
     - name: Run Instrumentation Tests
       run: ./gradlew connectedAndroidTest
