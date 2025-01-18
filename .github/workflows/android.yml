@@ -46,7 +46,7 @@ jobs:
 
   instrumentation-test:
     needs: [unit-tests]
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     
     steps:
       - name: Checkout the code
